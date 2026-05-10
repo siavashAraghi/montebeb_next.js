@@ -35,7 +35,7 @@ export async function getProducts(): Promise<Array<Product & {category_id:number
   cacheLife("hours");
 
   try {
-    const GET_PRODUCTS_QUERY = `SELECT pg.category_id, p.id, p.name, p.title, p.short_description, p.description, p.main_img_url, p.marketing_img_url, p.price, p.created_at, p.in_marketing
+    const GET_PRODUCTS_QUERY = `SELECT pg.category_id, p.id, p.name, p.title, p.short_description, p.description, p.main_img_url, p.marketing_img_url, p.mobile_marketing_img_url, p.price, p.created_at, p.in_marketing
      FROM public.product as p
      JOIN productcategories pg ON pg.product_id = p.id`;
 

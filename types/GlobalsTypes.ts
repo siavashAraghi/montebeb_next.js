@@ -46,6 +46,7 @@ export interface Product {
   in_marketing: boolean;
   create_at: string;
   marketing_img_url:string;
+  mobile_marketing_img_url:string;
 }
 
 export interface GeneralDataTypes {
