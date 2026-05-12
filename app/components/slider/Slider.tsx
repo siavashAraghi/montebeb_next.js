@@ -8,6 +8,7 @@ import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 const RESPONSIVE_DEFAULTS = { slidesPerView: 1 };
 
+
 const Slider: React.FC<DefaultSliderTypes> = ({
   breakpoints = {
     640: RESPONSIVE_DEFAULTS,
@@ -19,17 +20,17 @@ const Slider: React.FC<DefaultSliderTypes> = ({
   isNavigation = true,
   isPagination = true,
   autoplayTimeout = 2500,
+  autoPlay=true,
   isLoop = true,
   children,
 }) => {
   return (
-    <div className="slider-container">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={spaceBetween}
         navigation= {isNavigation}
         pagination={isPagination ? { clickable: true } : false}
-        autoplay={{ delay: autoplayTimeout }}
+        autoplay={autoPlay ?{ delay: autoplayTimeout } : false}
         loop={isLoop}
         breakpoints={{
           640: { slidesPerView: breakpoints[640].slidesPerView },
@@ -40,7 +41,6 @@ const Slider: React.FC<DefaultSliderTypes> = ({
       >
         {children?.map((item) => <SwiperSlide key={item.key}>{item}</SwiperSlide>)}
       </Swiper>
-    </div>
   );
 };
 

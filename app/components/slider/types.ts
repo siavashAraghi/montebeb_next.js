@@ -9,5 +9,6 @@ export interface DefaultSliderTypes {
     isPagination?:boolean,
     autoplayTimeout?:number,
     isLoop?:boolean,
-    children?: Array<React.ReactElement>
+    children?: Array<React.ReactElement>,
+    autoPlay?:boolean,
 }

@@ -16,16 +16,14 @@ const PrimarySlide: React.FC<{ slideDetails: Product }> = ({
             <Image
               src={slideDetails.mobile_marketing_img_url}
               alt={slideDetails.title}
-              width={800}
-              height={1000}
-              className=" block md:hidden w-full"
+              className=" block md:hidden w-full object-contain"
+              fill
             />
             <Image
               src={slideDetails.marketing_img_url}
               alt={slideDetails.title}
-              width={1600}
-              height={700}
-              className="hidden md:block w-full"
+             className="hidden md:block w-full object-cover"
+             fill
             />
             <div className="absolute left-20 rounded-lg p-2 bottom-5 md:bottom-12 lg:bottom-25 text-slate-600 bg-[white]/50 w-50 md:w-50 lg:w-120 flex flex-col dark:bg-black/50">
               <p className="md:text-normal lg:text-2xl mb-4 underline dark:text-slate-300">
