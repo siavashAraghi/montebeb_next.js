@@ -121,3 +121,18 @@
       // Preventing duplication (each product in a category should only appear once)
       @@unique([product_id, category_id])
     }
+
+    model General {
+      id                    Int  @id  @default(autoincrement())
+
+      title                 String
+      desciption            String
+      short_description     String 
+      keys                  String
+      logo_url              String
+      address               String
+      tel                   String
+      mobile                String
+      email                 String
+      header_text           String
+    }

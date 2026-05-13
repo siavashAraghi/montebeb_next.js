@@ -8,6 +8,7 @@ import { getPosts } from "@/models/post";
 import { SecondCard } from "../../Components/Cards/second/second";
 import { getCategories } from "@/models/categories";
 import { BlueCard } from "../../Components/Cards/BlueCard/blueCard";
+import Footer from "../../Components/Footer/Footer";
 
 const Home: React.FC = async () => {
   const PRODUCTS = await getProducts();
@@ -84,7 +85,11 @@ const Home: React.FC = async () => {
           {CATS.map((cat) => <BlueCard key={cat.id} label={cat.name} title={cat.title} link={cat.url_address} image={cat.image_url} />)}
         </div>
       </Section>
+
+      <Footer/>
     </>
+
+    
   );
 };
 

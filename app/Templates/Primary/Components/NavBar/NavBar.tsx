@@ -2,7 +2,7 @@ import { getHeaderNavList } from "@/models/header_footer";
 import { getProducts } from "@/models/products";
 import PrimaryNavBar from "./PrimaryNavBar";
 import { Suspense } from "react";
-import { getGeneral } from "@/models/settings";
+import { getGeneral } from "@/models/general";
 
 const NavBar: React.FC = async () => {
   const NAV_LINKS = await getHeaderNavList();

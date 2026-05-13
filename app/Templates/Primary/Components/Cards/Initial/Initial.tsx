@@ -36,7 +36,7 @@ export const InitialCard: React.FC<InitialCardProps> = ({
         <div className="w-full relative flex justify-center">
           <Link
             href={link}
-            className= "w-full md:w-68 h-full flex flex-col saturate-100 relative"
+            className= "w-full md:w-68 h-full flex flex-col saturate-100 relative py-12"
           >
             <Image
               width={100}
@@ -46,8 +46,8 @@ export const InitialCard: React.FC<InitialCardProps> = ({
               src={image}
               alt={title}
             />
-            <div className=" rounded-bl-xl rounded-br-xl flex justify-center flex-col">
-              <h3 className="relative my-4 text-center font-bold text-xl md:text-sm lg:text-xl text-slate-600 dark:text-slate-300 shadow-[0px_-25px_60px_48px_white] dark:shadow-none">
+            <div className=" rounded-bl-xl rounded-br-xl flex justify-center flex-col shadow-2xl">
+              <h3 className="relative my-4 text-center font-bold text-xl md:text-sm lg:text-xl text-slate-600 dark:text-slate-300 shadow-[0px_-25px_40px_28px_white] dark:shadow-none">
                 {title}
               </h3>
               <div className="bg-yellow-600 h-0.5 flex justify-center items-center my-4">

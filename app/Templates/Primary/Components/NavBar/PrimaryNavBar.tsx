@@ -9,7 +9,7 @@ import { Fragment } from "react/jsx-runtime";
 const PrimaryNavBar: React.FC<{
   products: Array<Product & { category_id: number }> | null;
   navlinks: Array<NavLinks> | null;
-  generalData:GeneralDataTypes
+  generalData:GeneralDataTypes | null
 }> = ({ products, navlinks,generalData }) => {
   const [clickedOnBurger, setClickedOnBurger] = useState(false);
   const [ActiveSubMenuNum, setActiveSubMenuNum] = useState(-1);
@@ -20,12 +20,12 @@ const PrimaryNavBar: React.FC<{
       <div className="flex justify-between items-center border-b border-gray-200 shadow-md md:hidden bg-white dark:bg-slate-800">
         <Link title="Montebebe Baby Products Manufacturer " href="/">
           <h1 className="text-transparent h-0">
-            {generalData.title}
+            {generalData?.title}
           </h1>
           <Image
             className="w-40 object-contain ml-5 dark:invert"
-            src={generalData.logo_url}
-            alt={generalData.title}
+            src={generalData?.logo_url ?? ""}
+            alt={generalData?.title ?? ""}
             width={100}
             height={100}
           />
@@ -41,14 +41,14 @@ const PrimaryNavBar: React.FC<{
         <div className=" hidden md:flex bg-[#dff0f570] dark:bg-slate-800 justify-between items-center ">
           <Link title="Montebebe Home Page" href="/">
             <h1 className="text-transparent h-0">
-              {generalData.title}
+              {generalData?.title}
             </h1>
             <Image
               className="md:w-50 object-contain md:ml-20 dark:invert"
-              src={generalData.logo_url}
+              src={generalData?.logo_url ?? ""}
               width={100}
               height={100}
-              alt={generalData.title}
+              alt={generalData?.title ?? ""}
             />
           </Link>
           <div className="lg:mr-30">
@@ -77,14 +77,14 @@ const PrimaryNavBar: React.FC<{
           <li className="h-16 flex justify-center items-center text-slate-800 border-b pl-4 border-gray-200 md:border-0 md:hidden">
             <Link title="Montebebe Home Page" href="/">
               <h1 className="text-transparent h-0">
-                {generalData.desciption}
+                {generalData?.desciption}
               </h1>
               <Image
                 className="w-50 md:hidden object-contain mb-8 dark:invert"
-                src={generalData.logo_url}
+                src={generalData?.logo_url ?? ""}
                 width={100}
                 height={100}
-                alt={generalData.title}
+                alt={generalData?.title ?? ""}
               />
             </Link>
           </li>

@@ -53,8 +53,15 @@ export interface GeneralDataTypes {
   id:number;
   title:string;
   desciption:string;
+  short_description:string;
   keys:string;
-  logo_url:string
+  logo_url:string;
+  address:string;
+  tel:string;
+  mobile:string;
+  email:string;
+  header_text: string
+  
 }
 
 export interface PostTypes {
