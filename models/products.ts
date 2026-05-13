@@ -32,7 +32,7 @@ createInitialProductTable();
  */
 export async function getProducts(): Promise<Array<Product & {category_id:number}> | null> {
   "use cache";
-  cacheLife("hours");
+  cacheLife("days");
 
   try {
     const GET_PRODUCTS_QUERY = `SELECT pg.category_id, p.id, p.name, p.title, p.short_description, p.description, p.main_img_url, p.marketing_img_url, p.mobile_marketing_img_url, p.price, p.created_at, p.in_marketing
