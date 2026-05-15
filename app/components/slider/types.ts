@@ -10,5 +10,15 @@ export interface DefaultSliderTypes {
     autoplayTimeout?:number,
     isLoop?:boolean,
     children?: Array<React.ReactElement>,
-    autoPlay?:boolean,
+    autoPlay?:boolean
+}
+
+export interface SlideData {
+  key:number;
+  index: number;
+  title: string;
+  label: string | number;
+  desciption: string;
+  image: string;
+  link: string;
 }

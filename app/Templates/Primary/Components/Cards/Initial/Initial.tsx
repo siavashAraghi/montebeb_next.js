@@ -1,7 +1,7 @@
-import Image from "next/image";
+import SlideImage from "@/app/components/slider/SlideImage";
 import Link from "next/link";
 
-interface InitialCardProps {
+export interface InitialCardProps {
   index: number;
   title: string;
   label: string | number;
@@ -25,27 +25,33 @@ export const InitialCard: React.FC<InitialCardProps> = ({
     "lavender",
     "khaki",
     "cadetblue",
-    "darkkhaki",    
+    "darkkhaki",
     "lightcyan",
   ];
   const COLOR = COLORS[index];
-  const RADIUS = ((index + 1) % 2 == 0) ? {borderBottomLeftRadius: "50%",borderTopRightRadius: "50%"} : {borderTopLeftRadius: "50%", borderBottomRightRadius: "50%"};
+  const RADIUS =
+    (index + 1) % 2 == 0
+      ? { borderBottomLeftRadius: "50%", borderTopRightRadius: "50%" }
+      : { borderTopLeftRadius: "50%", borderBottomRightRadius: "50%" };
   return (
     <div className="relative mx-auto">
       <div className="w-full h-full dark:brightness-70">
         <div className="w-full relative flex justify-center">
           <Link
             href={link}
-            className= "w-full md:w-68 h-full flex flex-col saturate-100 relative py-12"
+            className="w-full md:w-68 h-full flex flex-col saturate-100 relative py-12"
           >
-            <Image
-              width={100}
-              height={100}
-              style={{backgroundColor:COLOR,...RADIUS}}
-              className=" w-full h-full dark:brightness-70"
-              src={image}
-              alt={title}
-            />
+            <div className="h-64 w-full">
+              <SlideImage
+                width={100}
+                height={100}
+                src={image}
+                alt={title}
+                priority={false}
+                style={{ backgroundColor: COLOR, ...RADIUS }}
+                classes="w-full h-full dark:brightness-70"
+              />
+            </div>
             <div className=" rounded-bl-xl rounded-br-xl flex justify-center flex-col shadow-2xl">
               <h3 className="relative my-4 text-center font-bold text-xl md:text-sm lg:text-xl text-slate-600 dark:text-slate-300 shadow-[0px_-25px_40px_28px_white] dark:shadow-none">
                 {title}

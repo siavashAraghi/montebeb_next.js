@@ -23,6 +23,7 @@ const PrimaryNavBar: React.FC<{
             {generalData?.title}
           </h1>
           <Image
+            preload={true}
             className="w-40 object-contain ml-5 dark:invert"
             src={generalData?.logo_url ?? ""}
             alt={generalData?.title ?? ""}
@@ -111,7 +112,7 @@ const PrimaryNavBar: React.FC<{
                       <span className="inline-block md:hover:bg-[#7499a5] md:hover:text-white md:duration-400 transition md:px-4 md:py-2 text-center rounded-4xl md:cursor-pointer  dark:text-slate-300">
                         {item.name}
                       </span>
-                      <span className={`inline-block duration-200 ease-in-out transition-all w-[min(3.5vw,1.5vh)] h-[min(3.5vw,1.5vh)] border-[3px] border-gray-100 border-t-0 border-l-0 ${ ActiveSubMenuNum==item.id ? 'rotate-226': 'rotate-45'} mr-[8%]  md:hidden`}></span>
+                      <span className={`inline-block duration-200 ease-in-out transition-all w-[min(3.5vw,1.5vh)] h-[min(3.5vw,1.5vh)] border-[3px] border-slate-300 dark:border-gray-100 border-t-0 border-l-0 ${ ActiveSubMenuNum==item.id ? 'rotate-226': 'rotate-45'} mr-[8%]  md:hidden`}></span>
                     </span>
                     {/* Nested Links */}
                     <ul className={`gap-12 justify-between overflow-hidden transition-all  duration-200 ease-in-out  md:flex md:absolute md:left-0 md:right-0 md:justify-center md:duration-250 md:delay-150 md:top-full md:z-0 bg-white z-100 dark:bg-slate-800 ${ActiveSubMenuNum == item.id ? "max-h-250" : 'max-h-0 md:max-h-250'} md:h-0 md:group-hover:h-120 group-hover:z-2 md:group-hover:shadow-md`}>
@@ -123,7 +124,7 @@ const PrimaryNavBar: React.FC<{
                               >
                                 <li
                                   key={product.category_id + product.name}
-                                  className={`flex justify-between items-center text-slate-600 text-lg font-medium md:bg-transparent md:text-2xl md:flex md:flex-col md:justify-center md:items-center md:gap-0 ${index == 0 ? "border-b md:border-0" : products?.length && index < products?.length - 1 ? "border-b md:border-0" : ""}   border-blue-200 bg-slate-600`}
+                                  className={`flex justify-between items-center text-lg font-medium md:bg-transparent md:text-2xl md:flex md:flex-col md:justify-center md:items-center md:gap-0 ${index == 0 ? "border-b md:border-0" : products?.length && index < products?.length - 1 ? "border-b md:border-0" : ""}   border-blue-200 bg-[#dff0f570] dark:bg-slate-600 dark:md:bg-transparent dark:text-slate-600`}
                                 >
                                   <Link
                                     title={product.title}

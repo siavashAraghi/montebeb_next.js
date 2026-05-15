@@ -1,7 +1,6 @@
 import { getHeaderNavList } from "@/models/header_footer";
 import { getProducts } from "@/models/products";
 import PrimaryNavBar from "./PrimaryNavBar";
-import { Suspense } from "react";
 import { getGeneral } from "@/models/general";
 
 const NavBar: React.FC = async () => {
@@ -10,7 +9,7 @@ const NavBar: React.FC = async () => {
   const GENERAL_DATA = await getGeneral();
     return (
       <nav>
-        <Suspense fallback={<p>Loading ...</p>}><PrimaryNavBar products={PRODUCTS} navlinks={NAV_LINKS} generalData={GENERAL_DATA}/></Suspense>
+        <PrimaryNavBar products={PRODUCTS} navlinks={NAV_LINKS} generalData={GENERAL_DATA}/>
       </nav>
     );
 };

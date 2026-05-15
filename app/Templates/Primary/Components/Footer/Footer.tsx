@@ -4,7 +4,9 @@ import Image from "next/image";
 import { getGeneral } from "@/models/general";
 
 const Footer: React.FC = async () => {
-  const NAV_LINKS = (await getHeaderNavList())?.filter(item => item.source_type == "page");
+  const NAV_LINKS = (await getHeaderNavList())?.filter(
+    (item) => item.source_type == "page",
+  ).sort();
   const GENERAL_DATA = await getGeneral();
 
   return (
@@ -27,7 +29,9 @@ const Footer: React.FC = async () => {
                 />
               </Link>
             </div>
-            <p className="text-gray-400 dark:text-slate-300 ">{GENERAL_DATA?.short_description}</p>
+            <p className="text-gray-400 dark:text-slate-300 ">
+              {GENERAL_DATA?.short_description}
+            </p>
             <div className="flex space-x-4">
               <Link
                 href="https://www.youtube.com/@montebebeglobal"
@@ -70,14 +74,16 @@ const Footer: React.FC = async () => {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Quick Links</h3>
             <ul className="space-y-2">
-                {NAV_LINKS?.map(link =>               <li key={link.id}>
-                <Link
-                  href={link.url_address}
-                  className="text-gray-400 dark:text-slate-300 dark:hover:text-slate-900   hover:text-slate-500 transition"
-                >
-                  {link.name}
-                </Link>
-              </li>)}
+              {NAV_LINKS?.map((link) => (
+                <li key={link.id}>
+                  <Link
+                    href={link.url_address}
+                    className="text-gray-400 dark:text-slate-300 dark:hover:text-slate-900   hover:text-slate-500 transition"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -87,11 +93,24 @@ const Footer: React.FC = async () => {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Contact Us</h3>
             <address className="not-italic text-gray-400 dark:text-slate-300">
-              {GENERAL_DATA?.address.split(",").map((item,index) => <p key={item+index}>{item}</p>)}
-              <p>phone: {GENERAL_DATA?.tel}</p>             
+              {GENERAL_DATA?.address.split(",").map((item, index) => (
+                <p key={item + index}>{item}</p>
+              ))}
+              <p className="mt-2">
+                Phone:{" "}
+                <Link
+                  href={`tel:${GENERAL_DATA?.tel}`}
+                  className=" transition"
+                >
+                  {GENERAL_DATA?.tel}
+                </Link>
+              </p>
               <p className="mt-2">
                 Email:{" "}
-                <Link href={`mailto:${GENERAL_DATA?.email}`} className=" transition">
+                <Link
+                  href={`mailto:${GENERAL_DATA?.email}`}
+                  className=" transition"
+                >
                   {GENERAL_DATA?.email}
                 </Link>
               </p>

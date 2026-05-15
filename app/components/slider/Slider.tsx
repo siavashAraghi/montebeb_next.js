@@ -8,7 +8,6 @@ import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 const RESPONSIVE_DEFAULTS = { slidesPerView: 1 };
 
-
 const Slider: React.FC<DefaultSliderTypes> = ({
   breakpoints = {
     640: RESPONSIVE_DEFAULTS,
@@ -20,27 +19,32 @@ const Slider: React.FC<DefaultSliderTypes> = ({
   isNavigation = true,
   isPagination = true,
   autoplayTimeout = 2500,
-  autoPlay=true,
+  autoPlay = false,
   isLoop = true,
   children,
 }) => {
   return (
-      <Swiper
-        modules={[Navigation, Pagination, Autoplay]}
-        spaceBetween={spaceBetween}
-        navigation= {isNavigation}
-        pagination={isPagination ? { clickable: true } : false}
-        autoplay={autoPlay ?{ delay: autoplayTimeout } : false}
-        loop={isLoop}
-        breakpoints={{
-          640: { slidesPerView: breakpoints[640].slidesPerView },
-          768: { slidesPerView: breakpoints[768].slidesPerView },
-          900: { slidesPerView: breakpoints[900].slidesPerView },
-          1024: { slidesPerView: breakpoints[1024].slidesPerView },
-        }}
-      >
-        {children?.map((item) => <SwiperSlide key={item.key}>{item}</SwiperSlide>)}
-      </Swiper>
+    <Swiper
+      modules={[Navigation, Pagination, Autoplay]}
+      spaceBetween={spaceBetween}
+      navigation={isNavigation}
+      pagination={isPagination ? { clickable: true } : false}
+      autoplay={autoPlay ? { delay: autoplayTimeout } : false}
+      loop={isLoop}
+      breakpoints={{
+        640: { slidesPerView: breakpoints[640].slidesPerView },
+        768: { slidesPerView: breakpoints[768].slidesPerView },
+        900: { slidesPerView: breakpoints[900].slidesPerView },
+        1024: { slidesPerView: breakpoints[1024].slidesPerView },
+      }}
+
+      observer={true}
+      observeParents={true}
+    >
+      {children?.map((item) => (
+        <SwiperSlide key={item.key}>{item}</SwiperSlide>
+      ))}
+    </Swiper>
   );
 };
 

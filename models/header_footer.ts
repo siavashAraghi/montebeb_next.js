@@ -17,7 +17,9 @@ export const getHeaderNavList:()=>Promise<Array<NavLinks> | null> = cache(async 
 
     SELECT 'category' AS source_type, c.id, c.parent_id, c.name, c.url_address, c.title, c.description, c.list_type
         FROM public.category c
-        INNER JOIN public.lists l ON c.list_type = l.id;
+        INNER JOIN public.lists l ON c.list_type = l.id
+
+    ORDER BY url_address ASC;
 `;
 
     const NAVS = (await pool.query(GET_NAVS_LINK_QUERY)).rows as Array<NavLinks>;
