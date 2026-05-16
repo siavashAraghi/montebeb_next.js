@@ -2,7 +2,7 @@ import React from "react";
 
 const InitialSkeleton: React.FC = () => {
   return (
-    <div className="relative mx-auto w-[33.33%] animate-pulse px-12 ">
+    <div className="relative mx-auto animate-pulse px-12 ">
       <div className="w-full h-full dark:brightness-70">
         <div className="w-full relative flex-col justify-center">
           <div className="h-64 w-full bg-gray-400">

@@ -23,7 +23,7 @@ const Home: React.FC = async () => {
     <>
       {IN_MARKETING_PRODUCTS ? (
         <Suspense fallback={<PrimarySlideSkeleton/>}>
-          <Slider >
+          <Slider>
             {IN_MARKETING_PRODUCTS.map((product) => (
               <PrimarySlide key={product.id} slideDetails={product} />
             ))}

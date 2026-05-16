@@ -20,13 +20,12 @@ export const SecondCard: React.FC<SecondCardProps> = ({
       className="flex flex-col h-full border border-gray-200 hover:border-transparent hover:shadow-lg focus:outline-hidden focus:border-transparent focus:shadow-lg transition duration-300 rounded-xl p-2 dark:border-neutral-700 dark:hover:border-transparent dark:hover:shadow-black/40 dark:focus:border-transparent dark:focus:shadow-black/40 group"
       href={`/Blog/${id}`}
     >
-      <div className="aspect-w-16 aspect-h-11">
+      <div className=" w-full h-72 relative">
         <Image
           className="w-full object-cover rounded-xl"
           src={image}
           alt={title}
-          width={100}
-          height={100}
+          fill
         />
       </div>
       <div className="my-6">
