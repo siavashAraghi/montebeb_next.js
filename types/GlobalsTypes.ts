@@ -35,6 +35,11 @@ export interface NavLinks {
   parent_id:number
 }
 
+export interface PageComponentType {
+  category:string | null;
+  item:string | null
+}
+
 export interface Product {
   id: number;
   name: string;
@@ -47,6 +52,9 @@ export interface Product {
   create_at: string;
   marketing_img_url:string;
   mobile_marketing_img_url:string;
+  origin:string,
+  cat_url?:string
+  colors?:Array<{name:string}>
 }
 
 export interface GeneralDataTypes {
@@ -84,4 +92,12 @@ export interface CategoryType {
   parent_id:number;
   list_type:string;
   url_address:string;
+}
+
+export interface ImagesTypes {
+product_name:string; 
+product_id:number;
+image_url:string;
+color_name:string;
+color_id:number;
 }

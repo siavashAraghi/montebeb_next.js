@@ -55,18 +55,25 @@
 
 
     model Product {
-      id                      Int         @id @default(autoincrement())
-      name                    String
-      title                   String
-      short_description       String
-      description             String
-      main_img_url            String
-      price                   Int
-      product_url             String
-      create_time             DateTime    @default(now())
+      id                           Int         @id @default(autoincrement())
+      name                         String
+      title                        String
+      short_description            String
+      description                  String
+      main_img_url                 String
+      marketing_img_url            String
+      mobile_marketing_img_url     String
+      price                        Int
+      product_url                  String
+      create_time                  DateTime    @default(now())
+      origin                       String
+      url_address                  String
 
       // Relation type with ProductCategories
       Category        ProductCategories[]
+
+      // Relation type woth Productcolors
+      Colors          Productcolors[]
 
     }
 
@@ -135,4 +142,50 @@
       mobile                String
       email                 String
       header_text           String
+    }
+
+    model Colors {
+      id                    Int  @id   @default(autoincrement())
+      name                  String
+      
+      // Relationship with Intermediate Table (Productcolors)
+      products   Productcolors[]
+      
+      // Relationship with Intermediate Table (Productimages)
+      images     Productimages[]
+
+    }
+
+
+    model Productcolors {
+      id                    Int   @id  @default(autoincrement())
+      color_id              Int
+      product_id            Int
+
+      product          Product     @relation(fields: [product_id], references: [id])
+      color            Colors      @relation(fields: [color_id],  references:[id])
+
+      // Preventing duplication (each product in a color pallet should only appear once)
+      @@unique([product_id, color_id])
+    }
+
+    model Images {
+      id                    Int  @id @default(autoincrement())
+      image_url             String
+
+      // Relationship with Colors Table
+      color          Colors     @relation(fields: [color_id], references:[id])
+
+      // Relationship with Intermediate Table (Productimages)
+      colors         Productimages[]
+    }
+
+    model Productimages {
+      id                    @Int  @id  @default(autoincrement())
+      
+      product_id            Int
+      image_id              Int
+
+      product         Product    @relation(fields: [product_id], references:[id])
+      image           Images     @relation(fields: [image_id], references:[id])
     }

@@ -27,22 +27,71 @@ const createInitialProductTable = async () => {
 createInitialProductTable();
 
 /**
+ * Returns products by category.
+ * @author Siavash Araghi
+ */
+export async function getProductsByCat(catName: string): Promise<Array<
+  Product & { category_id: number }
+> | null> {
+
+  try {
+    const GET_PRODUCTS_QUERY = `SELECT p.*
+    FROM category c
+    JOIN productcategories pg ON pg.category_id = c.id
+    JOIN product p ON p.id = pg.product_id
+    WHERE c.name = '${catName}'`;
+
+    const PRODUCT = (await pool.query(GET_PRODUCTS_QUERY)).rows;
+
+    return PRODUCT;
+  } catch (error) {
+    console.log("An Error Occured: " + error);
+    return null;
+  }
+}
+
+
+/**
+ * Returns product by id.
+ * @author Siavash Araghi
+ */
+export async function getProductsById(productId: string): Promise< Product| null> {
+  try {
+    const GET_PRODUCTS_QUERY = `SELECT c.name as color_name, p.id, p.name, p.title, p.short_description, p.description, p.main_img_url, p.marketing_img_url, p.mobile_marketing_img_url, p.price, p.created_at, p.in_marketing, p.origin
+     FROM public.product as p
+     LEFT JOIN productcolors pc ON pc.product_id = p.id
+     LEFT JOIN colors c ON c.id = pc.color_id
+     WHERE p.id = ${productId}`;
+
+    const products:Array<Product & {color_name:string}> = (await pool.query(GET_PRODUCTS_QUERY)).rows;
+    const product = products[0];
+    product.colors= products.map(item => {return{name:item.color_name}});
+    return product;
+  } catch (error) {
+    console.log("An Error Occured: " + error);
+    return null;
+  }
+}
+
+/**
  * Returns all products.
  * @author Siavash Araghi
  */
-export async function getProducts(): Promise<Array<Product & {category_id:number}> | null> {
+export async function getProducts(): Promise<Array<
+  Product & { category_id: number }
+> | null> {
   "use cache";
   cacheLife("days");
 
   try {
-    const GET_PRODUCTS_QUERY = `SELECT pg.category_id, p.id, p.name, p.title, p.short_description, p.description, p.main_img_url, p.marketing_img_url, p.mobile_marketing_img_url, p.price, p.created_at, p.in_marketing
+    const GET_PRODUCTS_QUERY = `SELECT  c.url_address as cat_url, pg.category_id, p.id, p.name, p.title, p.short_description, p.description, p.main_img_url, p.marketing_img_url, p.mobile_marketing_img_url, p.price, p.created_at, p.in_marketing, p.origin
      FROM public.product as p
-     JOIN productcategories pg ON pg.product_id = p.id`;
+     JOIN productcategories pg ON pg.product_id = p.id
+     JOIN category c ON c.id = pg.category_id;`;
 
     const PRODUCTS = (await pool.query(GET_PRODUCTS_QUERY)).rows;
 
     return PRODUCTS;
-
   } catch (error) {
     console.log("An Error Occured: " + error);
     return null;
