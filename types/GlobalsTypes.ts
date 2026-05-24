@@ -65,7 +65,9 @@ export interface GeneralDataTypes {
   tel:string;
   mobile:string;
   email:string;
-  header_text: string
+  header_text: string;
+  about_img_url:string;
+  about_description:string
   
 }
 

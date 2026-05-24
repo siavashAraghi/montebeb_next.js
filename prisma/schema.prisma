@@ -143,6 +143,8 @@
       mobile                String
       email                 String
       header_text           String
+      about_img_url         String
+      about_description     String
     }
 
     model Colors {

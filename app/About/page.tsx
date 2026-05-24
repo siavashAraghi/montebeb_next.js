@@ -1,15 +1,17 @@
-import { PageComponentType } from "@/types/GlobalsTypes";
-import React from "react";
+import { getGeneral } from "@/models/general";
+import { getSettings } from "@/models/settings";
 
 /**
  *
  */
-// const Blogs:React.FC = ():React.ReactNode =>{
-//     return <></>
-// }
-
 export default async function About(){
-    console.log("about")
+    const SETTINGS = await getSettings();
+      const ABOUT_COMPONENT = await import(
+        `@/Templates/${SETTINGS.templateName}/Pages/About/About`
+      );
+      const ABOUT = ABOUT_COMPONENT.default;
+      const DATA = await getGeneral();
+    
+      return <ABOUT {...DATA} />;
 
-    return <></>
 }

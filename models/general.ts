@@ -1,5 +1,6 @@
 import pool from "@/lib/db";
 import { GeneralDataTypes } from "@/types/GlobalsTypes";
+import { cacheTag } from "next/cache";
 
 /**
  * @author Siavash Araghi
@@ -7,6 +8,7 @@ import { GeneralDataTypes } from "@/types/GlobalsTypes";
  */
 export const getGeneral= async ():Promise<GeneralDataTypes | null> => {
   "use cache"
+  cacheTag("general")
   try {
     const GENERAL_QUERY = "SELECT * FROM general;";
     const GENERAL_DATA = (await pool.query(GENERAL_QUERY)).rows;
