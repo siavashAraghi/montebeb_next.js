@@ -60,6 +60,7 @@
       title                        String
       short_description            String
       description                  String
+      features                     String
       main_img_url                 String
       marketing_img_url            String
       mobile_marketing_img_url     String

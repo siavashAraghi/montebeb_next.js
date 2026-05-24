@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
 import Slider from "@/components/slider/Slider";
 import { ImagesTypes, Product } from "@/types/GlobalsTypes";
-import React, {useState } from "react";
+import React, { useState } from "react";
 import ColorButton, { ColorButtonType } from "../../Buttons/ColorButton";
 import SlideImage from "@/components/slider/SlideImage";
 
@@ -10,26 +10,33 @@ import SlideImage from "@/components/slider/SlideImage";
  * Generates card to display product in product page.
  * @author Siavash Araghi
  */
-export default function ProductCard({product,productImages}:{product:Product,productImages:Array<ImagesTypes>}):React.ReactNode {
-    const [color,setColor] = useState( product.colors ? product.colors[0].name : '' );
+export default function ProductCard({
+  product,
+  productImages,
+}: {
+  product: Product;
+  productImages: Array<ImagesTypes>;
+}): React.ReactNode {
+  const [color, setColor] = useState(
+    product.colors ? product.colors[0].name : "",
+  );
 
-    function changeImageColor(e:React.MouseEvent<HTMLButtonElement>) {
-        setColor(e.currentTarget.dataset.color as string)
-    }
+  function changeImageColor(e: React.MouseEvent<HTMLButtonElement>) {
+    setColor(e.currentTarget.dataset.color as string);
+  }
 
-    return (
+  return (
     <div className="bg-gray-100 dark:bg-slate-800">
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-wrap -mx-4">
           {/* <!-- Product Images --> */}
-          <div
-            className="w-full md:w-1/2 px-4 mb-8 relative"
-            id="product-images-container"
-          >
+          <div className="w-full md:w-1/2 px-4 mb-8 relative">
             {
               <div className="relative overflow-hidden rounded-xl ">
-                  <Slider>
-                    {productImages?.filter(image => image.color_name == color).map((image) => (
+                <Slider>
+                  {productImages
+                    ?.filter((image) => image.color_name == color)
+                    .map((image) => (
                       <div key={image.image_url} className="overflow-hidden">
                         <SlideImage
                           width={800}
@@ -42,7 +49,7 @@ export default function ProductCard({product,productImages}:{product:Product,pro
                         />
                       </div>
                     ))}
-                  </Slider>
+                </Slider>
               </div>
             }
           </div>
@@ -65,11 +72,15 @@ export default function ProductCard({product,productImages}:{product:Product,pro
               <h3 className="text-lg font-semibold mb-2 dark:text-gray-400">
                 Color:
               </h3>
-              <div className="flex space-x-2" id="product-color-lists">
+              <div className="flex space-x-2">
                 {product.colors
                   ? product.colors.map((color) => {
                       return (
-                        <ColorButton key={color.name} color={color.name as ColorButtonType["color"]} clickHandler={changeImageColor} />
+                        <ColorButton
+                          key={color.name}
+                          color={color.name as ColorButtonType["color"]}
+                          clickHandler={changeImageColor}
+                        />
                       );
                     })
                   : null}
@@ -81,8 +92,8 @@ export default function ProductCard({product,productImages}:{product:Product,pro
                 Key Features:
               </h3>
               <ul className="list-inside text-gray-700 list-none dark:text-gray-400">
-                {product.description.split(",").map((item) => (
-                  <li key={product.id + item} className="mb-4">
+                {product.features.split(",").map((item, index) => (
+                  <li key={product.id + index} className="mb-4">
                     {item}
                   </li>
                 ))}

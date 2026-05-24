@@ -1,5 +1,5 @@
 import SlideImage from "@/components/slider/SlideImage";
-import type { Product } from "@/types/GlobalsTypes";
+import { Product } from "@/types/GlobalsTypes";
 import Link from "next/link";
 import React from "react";
 
@@ -7,11 +7,13 @@ import React from "react";
  * Generates card to display product in products page
  * @author Siavash Araghi
  */
-export default function ProductsCard({
+export default function ProductsCardComponent
+({
   product,
 }: {
   product: Product;
 }): React.ReactNode {
+  console.log(product)
   return (
     <div key={product.id} className="group flex flex-col">
       <div className="relative">

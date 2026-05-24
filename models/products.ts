@@ -1,6 +1,6 @@
 import pool from "@/lib/db";
 import { Product } from "@/types/GlobalsTypes";
-import { cacheLife } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
 
 /**
  * Creates product table with default values if it does not exist on database.
@@ -30,12 +30,13 @@ createInitialProductTable();
  * Returns products by category.
  * @author Siavash Araghi
  */
-export async function getProductsByCat(catName: string): Promise<Array<
-  Product & { category_id: number }
-> | null> {
-
+export async function getProductsByCat(
+  catName: string,
+): Promise<Array<Product & { category_id: number }> | null> {
+  "use cache"
+  cacheTag("getProductsByCat_"+catName)
   try {
-    const GET_PRODUCTS_QUERY = `SELECT p.*
+    const GET_PRODUCTS_QUERY = `SELECT c.url_address AS cat_url, p.*
     FROM category c
     JOIN productcategories pg ON pg.category_id = c.id
     JOIN product p ON p.id = pg.product_id
@@ -50,22 +51,31 @@ export async function getProductsByCat(catName: string): Promise<Array<
   }
 }
 
-
 /**
  * Returns product by id.
  * @author Siavash Araghi
  */
-export async function getProductsById(productId: string): Promise< Product| null> {
+export async function getProductsById(
+  productId: string,
+): Promise<Product | null> {
+  "use cache";
+  cacheTag("getProductById_" + productId);
   try {
-    const GET_PRODUCTS_QUERY = `SELECT c.name as color_name, p.id, p.name, p.title, p.short_description, p.description, p.main_img_url, p.marketing_img_url, p.mobile_marketing_img_url, p.price, p.created_at, p.in_marketing, p.origin
+    const GET_PRODUCTS_QUERY = `SELECT cg.name AS category_name, c.name as color_name, p.id, p.name, p.title, p.short_description, p.description, p.features, p.main_img_url, p.marketing_img_url, p.mobile_marketing_img_url, p.price, p.created_at, p.in_marketing, p.origin
      FROM public.product as p
+     LEFT JOIN productcategories pg ON pg.product_id = p.id
+	   LEFT JOIN category cg ON cg.id = pg.category_id
      LEFT JOIN productcolors pc ON pc.product_id = p.id
      LEFT JOIN colors c ON c.id = pc.color_id
      WHERE p.id = ${productId}`;
 
-    const products:Array<Product & {color_name:string}> = (await pool.query(GET_PRODUCTS_QUERY)).rows;
+    const products: Array<Product & { color_name: string }> = (
+      await pool.query(GET_PRODUCTS_QUERY)
+    ).rows;
     const product = products[0];
-    product.colors= products.map(item => {return{name:item.color_name}});
+    product.colors = products.map((item) => {
+      return { name: item.color_name };
+    });
     return product;
   } catch (error) {
     console.log("An Error Occured: " + error);
@@ -84,7 +94,7 @@ export async function getProducts(): Promise<Array<
   cacheLife("days");
 
   try {
-    const GET_PRODUCTS_QUERY = `SELECT  c.url_address as cat_url, pg.category_id, p.id, p.name, p.title, p.short_description, p.description, p.main_img_url, p.marketing_img_url, p.mobile_marketing_img_url, p.price, p.created_at, p.in_marketing, p.origin
+    const GET_PRODUCTS_QUERY = `SELECT  c.url_address AS cat_url,c.name AS category_name, pg.category_id, p.id, p.name, p.title, p.short_description, p.description, p.features, p.main_img_url, p.marketing_img_url, p.mobile_marketing_img_url, p.price, p.created_at, p.in_marketing, p.origin
      FROM public.product as p
      JOIN productcategories pg ON pg.product_id = p.id
      JOIN category c ON c.id = pg.category_id;`;

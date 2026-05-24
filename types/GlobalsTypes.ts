@@ -35,11 +35,6 @@ export interface NavLinks {
   parent_id:number
 }
 
-export interface PageComponentType {
-  category:string | null;
-  item:string | null
-}
-
 export interface Product {
   id: number;
   name: string;
@@ -55,6 +50,8 @@ export interface Product {
   origin:string,
   cat_url?:string
   colors?:Array<{name:string}>
+  features:string
+  category_name:string
 }
 
 export interface GeneralDataTypes {

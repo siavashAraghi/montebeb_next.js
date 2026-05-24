@@ -1,29 +1,30 @@
+"use client"
+
 import PrimarySlide from "@/components/slider/components/primary/primary";
-import { getProducts } from "@/models/products";
 import React, { Suspense } from "react";
 import { InitialCard } from "../../../../components/Cards/Initial/Initial";
 import { Section } from "../../../../components/Generals/Section";
-import { getPosts } from "@/models/post";
 import { SecondCard } from "../../../../components/Cards/second/second";
-import { getCategories } from "@/models/categories";
 import { BlueCard } from "../../../../components/Cards/BlueCard/blueCard";
 import Slider from "@/components/slider/Slider";
 import PrimarySlideSkeleton from "@/components/slider/components/primary/PrimarySlideSkeleton";
 import SliderSkeleton from "@/components/slider/SliderSkeleton";
 import LoadingDots from "@/ui/skeletons/loadingDots";
-import type { PageComponentType } from "@/types/GlobalsTypes";
+import { CategoryType, PostTypes, Product } from "@/types/GlobalsTypes";
 
-const Home: React.FC<PageComponentType> = async () => {
-  const CATS = await getCategories();
-  const PRODUCTS = await getProducts();
-  const IN_MARKETING_PRODUCTS = PRODUCTS?.filter((item) => item.in_marketing);
-  const POSTS = (await getPosts()).filter((post) => post.published);
-
+const Home: React.FC<{
+  categories: Array<CategoryType>;
+  products: Array<Product& { category_id: number }>;
+  posts: Array<PostTypes>;
+}> = ({ categories, products, posts }) => {
+  
+  const IN_MARKETING_PRODUCTS = products?.filter((item) => item.in_marketing);
+  const POSTS = posts.filter((post) => post.published);
 
   return (
     <>
       {IN_MARKETING_PRODUCTS ? (
-        <Suspense fallback={<PrimarySlideSkeleton/>}>
+        <Suspense fallback={<PrimarySlideSkeleton />}>
           <Slider>
             {IN_MARKETING_PRODUCTS.map((product) => (
               <PrimarySlide key={product.id} slideDetails={product} />
@@ -35,7 +36,13 @@ const Home: React.FC<PageComponentType> = async () => {
       {/* ============ New products section =========== */}
       <Section title="New Collections">
         <div className="p-1 flex flex-wrap items-center justify-center">
-          <Suspense fallback={<SliderSkeleton><LoadingDots/></SliderSkeleton>}>
+          <Suspense
+            fallback={
+              <SliderSkeleton>
+                <LoadingDots />
+              </SliderSkeleton>
+            }
+          >
             <Slider
               autoPlay={false}
               breakpoints={{
@@ -84,7 +91,7 @@ const Home: React.FC<PageComponentType> = async () => {
       {/* =========== Our products (displaying products by category) =========== */}
       <Section title="Our products">
         <div className="p-1 flex flex-wrap items-center justify-center">
-          {CATS.map((cat) => (
+          {categories.map((cat) => (
             <BlueCard
               key={cat.id}
               label={cat.name}

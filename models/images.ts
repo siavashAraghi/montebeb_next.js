@@ -7,7 +7,7 @@ import { cacheTag } from "next/cache";
  * @author Siavash Araghi
  */
 export async function getImages(): Promise<Array<ImagesTypes> | null> {
-  "use cache"
+  "use cache";
   cacheTag("images");
   try {
     const GET_IMGS_URLS_QUERY = `SELECT p.name AS product_name, p.id, i.image_url, c.name AS color_name, c.id AS color_id FROM productimages pi
@@ -27,9 +27,11 @@ export async function getImages(): Promise<Array<ImagesTypes> | null> {
 /**
  *
  */
-export async function getImagesByProductId(id: number): Promise<Array<ImagesTypes>| null> {
-  "use cache"
-  cacheTag("image"+id);
+export async function getImagesByProductId(
+  id: number,
+): Promise<Array<ImagesTypes> | null> {
+  "use cache";
+  cacheTag("getImagesByProductId" + id);
 
   try {
     const GET_IMGS_URLS_QUERY = `SELECT p.name AS product_name, p.id, i.image_url, c.name AS color_name, c.id AS color_id FROM productimages pi

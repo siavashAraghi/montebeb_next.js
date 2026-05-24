@@ -1,3 +1,6 @@
+import { getCategories } from "@/models/categories";
+import { getPosts } from "@/models/post";
+import { getProducts } from "@/models/products";
 import { getSettings } from "@/models/settings";
 
 /**
@@ -10,5 +13,9 @@ export default async function HomePage() {
   );
   const HOME = HOME_COMPONENT.default;
 
-  return <HOME />;
+  const PRODUCTS = await getProducts();
+  const CATS = await getCategories();
+  const POSTS = await getPosts();
+
+  return <HOME posts={POSTS} categories={CATS} products={PRODUCTS} />;
 }
