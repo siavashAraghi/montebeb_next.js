@@ -1,16 +1,18 @@
-import { PageComponentType } from "@/types/GlobalsTypes";
+import PriamryBlogCard from "@/components/Cards/PostCard/PriamryBlogCard";
+import { getPostById } from "@/models/post";
+import { notFound } from "next/navigation";
 import React from "react";
 
 /**
  *
  */
-// const Blogs:React.FC = ():React.ReactNode =>{
-//     return <></>
-// }
-
-export default async function Blog({category,item}:PageComponentType):Promise<React.ReactNode>{
-    console.log(category)
-    console.log(item)
-
-    return <></>
+export default async function Blog({
+  params,
+}: {
+  params: { blogId: string };
+}):Promise<React.ReactNode>{
+  const { blogId } = (await params);
+  const POST = await getPostById(blogId[0]);
+  if (POST?.id) return <PriamryBlogCard post={POST}/>
+     else notFound();
 }

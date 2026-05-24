@@ -5,12 +5,8 @@ import Link from "next/link";
 import React from "react";
 
 /**
- * @returns All blogs
+ * @returns Displays All blogs
  * @author Siavash Araghi
- */
-
-/**
- *
  */
 export default async function Blogs(): Promise<React.ReactNode> {
   const POSTS = await getPosts();
