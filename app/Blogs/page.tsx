@@ -1,5 +1,4 @@
-import { PageComponentType } from "@/types/GlobalsTypes";
-import React from "react";
+import { getSettings } from "@/models/settings";
 
 /**
  *
@@ -9,7 +8,13 @@ import React from "react";
 // }
 
 export default async function Blogs(){
-    console.log("blogs")
+const SETTINGS = await getSettings();
+  const BLOGS_COMPONENT = await import(
+    `@/Templates/${SETTINGS.templateName}/Pages/Blogs/Blogs`
+  );
+  const BLOGS = BLOGS_COMPONENT.default;
 
-    return <></>
+  return <BLOGS />;
+
+    
 }
