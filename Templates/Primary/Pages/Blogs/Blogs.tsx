@@ -22,7 +22,7 @@ export default async function Blogs(): Promise<React.ReactNode> {
               key={post.id}
               title={post.title}
               className="flex flex-col h-full border border-gray-200 hover:border-transparent hover:shadow-lg focus:outline-hidden focus:border-transparent focus:shadow-lg transition duration-300 rounded-xl p-5 dark:border-neutral-700 dark:hover:border-transparent dark:hover:shadow-black/40 dark:focus:border-transparent dark:focus:shadow-black/40 group"
-              href={`Blogs/${post.id}/${post.short_description.replaceAll(" ","_")}`}
+              href={`Blogs/${post.id}/${post.short_description?.replaceAll(" ", "_")}`}
             >
               <div className="aspect-w-16 aspect-h-11">
                 <SlideImage
@@ -30,7 +30,7 @@ export default async function Blogs(): Promise<React.ReactNode> {
                   alt={post.title}
                   height={100}
                   classes="w-full object-cover rounded-xl"
-                  src={post.image_url}
+                  src={post.image_url ?? ""}
                   title={post.title}
                 ></SlideImage>
               </div>

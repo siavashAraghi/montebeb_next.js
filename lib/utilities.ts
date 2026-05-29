@@ -1,4 +1,4 @@
-import { NavLinks, PageComponentType, PagesName } from "@/types/GlobalsTypes";
+import { NavLinks } from "@/types/GlobalsTypes";
 
 /**
  *Finds out and Returns a link's sublinks
@@ -13,15 +13,16 @@ export function getSubLinks(parentLink: NavLinks, links: NavLinks[]) {
   return SUB_LINKS;
 }
 
-/**
- * Returns page name and its sub url
- * @author Siavash Araghi
- */
-export function decoupleRequestUrl(params:{ pageName?: string[]; }): {pageName:string} & PageComponentType {
-  if ("pageName" in params && Array.isArray(params.pageName)) {
-    const URL = params.pageName;
-    return {pageName:URL[0],category:URL[1] ?? null, item:URL[2] ?? null};
-  }else{
-    return {pageName:PagesName.home,category:null,item:null}
-  }
-}
+
+// /**
+//  * Returns page name and its sub url
+//  * @author Siavash Araghi
+//  */
+// export function decoupleRequestUrl(params:{ pageName?: string[]; }): {pageName:string} & PageComponentType {
+//   if ("pageName" in params && Array.isArray(params.pageName)) {
+//     const URL = params.pageName;
+//     return {pageName:URL[0],category:URL[1] ?? null, item:URL[2] ?? null};
+//   }else{
+//     return {pageName:PagesName.home,category:null,item:null}
+//   }
+// }

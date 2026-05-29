@@ -1,194 +1,202 @@
-    // schema.prisma
+// schema.prisma
+
+// ************ important **********
+// After defining your schema, you need to:
+// Generate the Prisma Client: This command reads your schema.prisma and generates the type-safe client code.
+// run this sentence in terminal : npx prisma generate
+
+// ************ important **********
+// Every time you update the schema.prisma file you need to run this command to update your datbase schema.
+// This command creates a SQL migration file and executes it.
+// npx prisma migrate dev --name init
+
+// ************ important **********
+// Generates migration file from a previous migration file to new shema.prisma 
+// npx prisma migrate diff --from-empty --to-schema prisma/schema.prisma --script > prisma/migrations/0_init/migration.sql
+// npx prisma migrate resolve --applied 0_init
+
+// If you only want to connect Prisma to an existing database
+// npx prisma db pull
 
 
-    // ************ important **********
-    // After defining your schema, you need to:
-    // Generate the Prisma Client: This command reads your schema.prisma and generates the type-safe client code.
-    // run this sentence in terminal : npx prisma generate
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
 
 
+model settings {
+  id            Int      @id @default(autoincrement())
+  template_name String   @unique(map: "settings_templatename_key") @default("Primary") @db.VarChar(50)
+  created_at    DateTime @default(now()) @db.Timestamp(6)
+  active        Boolean  @default(true)
+}
 
-    generator client {
-      provider = "prisma-client-js"
-    }
+model User {
+  id         Int       @id(map: "users_pkey") @default(autoincrement())
+  username   String    @unique(map: "users_username_key") @default("Admin") @db.VarChar(50)
+  email      String    @unique(map: "users_email_key") @default("siavash.araghi@yahoo.com") @db.VarChar(50)
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  active     Boolean?  @default(true)
+  posts      Post[]
 
-    datasource db {
-      provider = "postgresql" // or mysql, sqlserver, sqlite, mongodb
-      url      = env("DATABASE_URL")
-    }
+  @@map("user")
+}
 
-    model Settings {
-      id           Int      @id @default(autoincrement())
-      templateName String   @unique
-      createTime   DateTime @default(now())
-      active       Boolean  @default(false)
-    }
+model Post {
+  id                Int       @id @default(autoincrement())
+  title             String    @db.VarChar(50)
+  content           String    @db.VarChar
+  published         Boolean?  @default(false)
+  created_at        DateTime? @db.Time(6)
+  author_id         Int?
+  image_url         String?   @db.VarChar(100)
+  short_description String?   @db.VarChar(80)
+  author            User?     @relation(fields: [author_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "author")
 
+  @@map("post")
+}
 
+model Product {
+  id                       Int                 @id @default(autoincrement())
+  name                     String              @db.VarChar(50)
+  title                    String              @db.VarChar(50)
+  short_description        String              @db.VarChar(150)
+  description              String              @db.VarChar
+  main_img_url             String              @db.VarChar
+  price                    Int
+  created_at               DateTime            @default(now()) @db.Timestamp(6)
+  in_marketing             Boolean             @default(false)
+  marketing_img_url        String?             @db.VarChar(50)
+  mobile_marketing_img_url String?             @db.VarChar(50)
+  url_address              String?             @db.VarChar(50)
+  origin                   String?             @db.VarChar(40)
+  features                 String?             @db.VarChar
+  category                 ProductCategories[]
+  colors                   ProductColors[]
+  productImages            ProductImages[]
 
-    model User {
-      id         Int      @id @default(autoincrement())
-      username   String   @unique
-      email      String   @unique
-      created_at DateTime @default(now())
-      active  Boolean  @default(true)
+  @@map("product")
+}
 
-      // Relations can also be defined here
-      posts      Post[]
-    }
+model Lists {
+  id        Int        @id @default(autoincrement())
+  list_type String     @db.VarChar(50)
+  category  Category[]
+  pages     Pages[]
 
+  @@map("lists")
+}
 
-    model Post {
-      id                   Int      @id @default(autoincrement())
-      title                String
-      content              String
-      published            Boolean  @default(false)
-      created_at           DateTime @default(now())
-      short_description    String
-      image_url            String
-    
-      // رابطه: هر پست متعلق به یک کاربر است
-      author     User     @relation(fields: [authorId], references: [id]) // به مدل User اشاره می‌کند
-      authorId   Int      // کلید خارجی که به id در مدل User اشاره دارد
-    
-    }
+model Pages {
+  id          Int    @id @default(autoincrement())
+  name        String @db.VarChar(50)
+  title       String @db.VarChar(50)
+  description String @db.VarChar(100)
+  url_address String @db.VarChar(50)
+  keys        String @db.VarChar(50)
+  list_type   Int?
+  list        Lists? @relation(fields: [list_type], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
+  @@map("pages")
+}
 
-    model Product {
-      id                           Int         @id @default(autoincrement())
-      name                         String
-      title                        String
-      short_description            String
-      description                  String
-      features                     String
-      main_img_url                 String
-      marketing_img_url            String
-      mobile_marketing_img_url     String
-      price                        Int
-      product_url                  String
-      create_time                  DateTime    @default(now())
-      origin                       String
-      url_address                  String
+model Category {
+  id          Int                 @id @default(autoincrement())
+  name        String              @db.VarChar(50)
+  parent_id   Int?
+  url_address String              @default("") @db.VarChar(50)
+  title       String?             @db.VarChar(50)
+  description String?             @db.VarChar(120)
+  list_type   Int?
+  image_url   String?             @db.VarChar(50)
+  list        Lists?              @relation(fields: [list_type], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  parent      Category?           @relation("CategoryHierarchy", fields: [parent_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "parent")
+  children    Category[]          @relation("CategoryHierarchy")
+  products    ProductCategories[]
 
-      // Relation type with ProductCategories
-      Category        ProductCategories[]
+  @@map("category")
+}
 
-      // Relation type woth Productcolors
-      Colors          Productcolors[]
+model ProductCategories {
+  id          Int      @id @default(autoincrement())
+  product_id  Int
+  category_id Int
+  category    Category @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "category")
+  product     Product  @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "product")
 
-    }
+  @@unique([product_id, category_id], map: "Unique_columns")
+  @@map("productcategories")
+}
 
-    model Lists {
-      id            Int       @id  @default(autoincrement())
-      list_type     String
+model General {
+  id                Int     @id(map: "General_pkey") @default(autoincrement())
+  title             String? @db.VarChar(50)
+  description       String? @db.VarChar(200)
+  keys              String? @db.VarChar(120)
+  logo_url          String? @db.VarChar(50)
+  header_text       String? @db.VarChar(70)
+  short_description String? @db.VarChar(200)
+  address           String? @db.VarChar(150)
+  tel               String? @db.VarChar(25)
+  mobile            String? @db.VarChar(25)
+  email             String? @db.VarChar(40)
+  about_img_url     String? @db.VarChar
+  about_description String? @db.VarChar
 
-      category      Category[]
-      pages         Pages[]
-    }
+  @@map("general")
+}
 
-    model Pages {
-      id            Int       @id @default(autoincrement())
-      name          String
-      title         String
-      description   String
-      url_address   String
-      keys          String
-      list_type     Int
+model Colors {
+  id       Int             @id @default(autoincrement())
+  name     String          @db.VarChar(50)
+  images   Images[]
+  products ProductColors[]
 
-      list          Lists     @relation(fields: [list_type], references: [id])
-    }
+  @@map("colors")
+}
 
-    model Category {
-      id      Int        @id  @default(autoincrement())
-      name             String 
-      description      String
-      parent_id        Int? 
-      list_type        Int
-      image_url        String
+model ProductColors {
+  id         Int     @id(map: "productColors_pkey") @default(autoincrement())
+  product_id Int
+  color_id   Int
+  color      Colors  @relation(fields: [color_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "color")
+  product    Product @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "product")
 
-      list       Lists     @relation(fields: [list_type], references: [id])
+  @@unique([product_id, color_id], map: "unique colors and products")
+  @@map("productcolors")
+}
 
+model Images {
+  id        Int             @id @default(autoincrement())
+  image_url String?         @db.VarChar(100)
+  color_id  Int?
+  color     Colors?         @relation(fields: [color_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "color")
+  colors    ProductImages[]
 
-      // Recursive relationship for nested Category
-      parent     Category?        @relation("CategoryHierarchy", fields: [parent_id], references: [id])
-      children   Category[]       @relation("CategoryHierarchy")
+  @@map("images")
+}
 
-      // Relationship with Intermediate Table (ProductCategories)
-      products   ProductCategories[]
-    }
+model ProductImages {
+  id         Int     @id @default(autoincrement())
+  product_id Int
+  image_id   Int
+  image      Images  @relation(fields: [image_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "image")
+  product    Product @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "productid")
 
-    model ProductCategories {
-      id               Int   @id  @default(autoincrement())
-      
-      product          Product     @relation(fields: [product_id], references: [id])
-      product_id       Int
+  @@map("productimages")
+}
 
-      category         Category   @relation(fields: [category_id], references:[id]) 
-      category_id      Int     
+model Messages {
+  id      Int     @id @default(autoincrement())
+  name    String? @db.VarChar(50)
+  email   String? @db.VarChar(50)
+  phone   String? @db.VarChar(50)
+  message String? @db.VarChar
 
-      // Preventing duplication (each product in a category should only appear once)
-      @@unique([product_id, category_id])
-    }
-
-    model General {
-      id                    Int  @id  @default(autoincrement())
-
-      title                 String
-      desciption            String
-      short_description     String 
-      keys                  String
-      logo_url              String
-      address               String
-      tel                   String
-      mobile                String
-      email                 String
-      header_text           String
-      about_img_url         String
-      about_description     String
-    }
-
-    model Colors {
-      id                    Int  @id   @default(autoincrement())
-      name                  String
-      
-      // Relationship with Intermediate Table (Productcolors)
-      products   Productcolors[]
-      
-      // Relationship with Intermediate Table (Productimages)
-      images     Productimages[]
-
-    }
-
-
-    model Productcolors {
-      id                    Int   @id  @default(autoincrement())
-      color_id              Int
-      product_id            Int
-
-      product          Product     @relation(fields: [product_id], references: [id])
-      color            Colors      @relation(fields: [color_id],  references:[id])
-
-      // Preventing duplication (each product in a color pallet should only appear once)
-      @@unique([product_id, color_id])
-    }
-
-    model Images {
-      id                    Int  @id @default(autoincrement())
-      image_url             String
-
-      // Relationship with Colors Table
-      color          Colors     @relation(fields: [color_id], references:[id])
-
-      // Relationship with Intermediate Table (Productimages)
-      colors         Productimages[]
-    }
-
-    model Productimages {
-      id                    @Int  @id  @default(autoincrement())
-      
-      product_id            Int
-      image_id              Int
-
-      product         Product    @relation(fields: [product_id], references:[id])
-      image           Images     @relation(fields: [image_id], references:[id])
-    }
+  @@map("messages")
+}

@@ -1,4 +1,4 @@
-import pool from "@/lib/db";
+import { PRISMA } from "@/lib/prisma";
 import { PostTypes } from "@/types/GlobalsTypes";
 import { cacheLife, cacheTag } from "next/cache";
 
@@ -11,14 +11,14 @@ export async function getPosts(): Promise<Array<PostTypes> | []> {
   cacheTag("posts");
   cacheLife("hours");
 
-  const GET_POSTS_QUERY =
-    "SELECT id, title, content, published, created_at, author_id, image_url, short_description FROM post";
+  // const GET_POSTS_QUERY =
+  //   "SELECT id, title, content, published, created_at, author_id, image_url, short_description FROM post";
 
   try {
-    const POSTS = (await pool.query(GET_POSTS_QUERY)).rows;
+    const POSTS = await PRISMA.post.findMany();
     return POSTS;
   } catch (error) {
-    console.log("An error occured: " + error);
+    console.error("An Error In getPosts: " + error);
     return [];
   }
 }
@@ -32,14 +32,18 @@ export async function getPostById(id: string):Promise<PostTypes|null> {
   cacheTag("post_" + id);
   cacheLife("weeks");
 
-  const GET_POSTS_QUERY =
-    `SELECT id, title, content, published, created_at, author_id, image_url, short_description FROM post WHERE id = ${id}`;
+  // const GET_POSTS_QUERY =
+  //   `SELECT id, title, content, published, created_at, author_id, image_url, short_description FROM post WHERE id = ${id}`;
 
   try {
-    const POST = (await pool.query(GET_POSTS_QUERY)).rows[0];
+    const POST = await PRISMA.post.findFirst({
+      where:{
+        id:+id
+      }
+    })
     return POST;
   } catch (error) {
-    console.log("An error occured: " + error);
+    console.error("An Error In getPostById: " + error);
     return null;
   }
 }

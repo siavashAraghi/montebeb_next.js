@@ -13,7 +13,7 @@ export default function ProductsCardComponent
 }: {
   product: Product;
 }): React.ReactNode {
-  console.log(product)
+  const CATEGORY = product.categories[0];
   return (
     <div key={product.id} className="group flex flex-col">
       <div className="relative">
@@ -39,7 +39,7 @@ export default function ProductsCardComponent
 
         <Link
           className="after:absolute after:inset-0 after:z-1"
-          href={`${product.cat_url}/${product.id}`}
+          href={`${CATEGORY.url_address}/${product.id}`}
           title={product.title}
         ></Link>
       </div>
@@ -89,7 +89,7 @@ export default function ProductsCardComponent
         <Link
           className="py-2 px-3 w-full inline-flex justify-center items-center gap-x-2 text-sm font-medium text-nowrap rounded-xl border border-transparent bg-yellow-400 text-black hover:bg-yellow-500 focus:outline-hidden focus:bg-yellow-500 transition disabled:opacity-50 disabled:pointer-events-none"
           title={product.title}
-          href={`${product.cat_url}/${product.id}`}
+          href={`${CATEGORY.url_address}/${product.id}`}
         >
           More Details
         </Link>

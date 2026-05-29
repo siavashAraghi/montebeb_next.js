@@ -1,15 +1,19 @@
-import { PageComponentType } from "@/types/GlobalsTypes";
-import React from "react";
+import { getSettings } from "@/models/settings";
+import { Suspense } from "react";
 
 /**
  *
  */
-// const Blogs:React.FC = ():React.ReactNode =>{
-//     return <></>
-// }
+export default async function Contact() {
+  const SETTINGS = await getSettings();
+  const CONTACT_COMPONENT = await import(
+    `@/Templates/${SETTINGS.templateName}/Pages/Contact/Contact`
+  );
+  const CONTACT = CONTACT_COMPONENT.default;
 
-export default async function Contact(){
-    console.log("Contact")
-
-    return <></>
+  return (
+    <Suspense fallback={<h1>loading... for cantact</h1>}>
+      <CONTACT />
+    </Suspense>
+  );
 }

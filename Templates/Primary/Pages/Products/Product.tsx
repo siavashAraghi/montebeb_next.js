@@ -17,10 +17,12 @@ export default async function Product({
 }): Promise<React.ReactNode> {
 
   const {productId,productCat} =  await params;
-  const product = await getProductsById(productId[0]);
+  const product = await getProductsById(+productId[0]);
+  const CATEGORY = product?.categories[0].name?.replaceAll(" ","_");
   let product_image: Array<ImagesTypes> | null;
 
-  if (product?.id && product.category_name.replaceAll(" ","_") == productCat) {
+
+  if (product?.id && CATEGORY == productCat) {
     product_image = await getImagesByProductId(product?.id) ?? [];
     return (
       <Suspense fallback={<ProductCardSkeleton />}><ProductCard product={product} productImages={product_image} /></Suspense>

@@ -1,4 +1,4 @@
-import pool from "@/lib/db";
+import { PRISMA } from "@/lib/prisma";
 import { GeneralDataTypes } from "@/types/GlobalsTypes";
 import { cacheTag } from "next/cache";
 
@@ -6,16 +6,15 @@ import { cacheTag } from "next/cache";
  * @author Siavash Araghi
  * @returns General data of website
  */
-export const getGeneral= async ():Promise<GeneralDataTypes | null> => {
-  "use cache"
-  cacheTag("general")
-  try {
-    const GENERAL_QUERY = "SELECT * FROM general;";
-    const GENERAL_DATA = (await pool.query(GENERAL_QUERY)).rows;
+export const getGeneral = async (): Promise<GeneralDataTypes | null> => {
+  "use cache";
+  cacheTag("general");
 
-    return GENERAL_DATA[0];
+  try {
+    const data = await PRISMA.general.findMany();
+    return data[0];
   } catch (error) {
-    console.log("An error occured : " + error);
+    console.error("Error In getGeneral : " + error);
     return null;
   }
 };

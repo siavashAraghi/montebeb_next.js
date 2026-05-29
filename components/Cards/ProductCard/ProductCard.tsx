@@ -44,7 +44,7 @@ export default function ProductCard({
                           key={image.image_url}
                           title={`${image.color_name} ${image.product_name}`}
                           alt={product.name}
-                          src={image.image_url}
+                          src={image.image_url ?? ""}
                           classes="object-cover"
                         />
                       </div>
@@ -92,7 +92,7 @@ export default function ProductCard({
                 Key Features:
               </h3>
               <ul className="list-inside text-gray-700 list-none dark:text-gray-400">
-                {product.features.split(",").map((item, index) => (
+                {product.features?.split(",").map((item, index) => (
                   <li key={product.id + index} className="mb-4">
                     {item}
                   </li>
