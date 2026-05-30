@@ -23,7 +23,6 @@ export async function addMessage({name,email,phone,message}:MessageType):Promise
         return result.id ? true : false; 
     } catch (error) {
         console.error("Error In addMessage :", error);
-        // Handle the error appropriately, maybe re-throw or return false
         return false; 
     }
 

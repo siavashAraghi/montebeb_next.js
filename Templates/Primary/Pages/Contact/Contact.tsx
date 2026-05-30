@@ -1,9 +1,28 @@
 "use client";
 
+import usePreventScrolling from "@/hooks/usePreventScrolling";
 import { formRegister } from "@/lib/actions";
 import { CaptchaProps, FormState } from "@/types/GlobalsTypes";
 import SubmitButton from "@/ui/skeletons/SubmitButton";
-import React, { useActionState, useEffect, useState } from "react";
+import React, {
+  useActionState,
+  useCallback,
+  useEffect,
+  useState,
+  useTransition,
+} from "react";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+
+type Inputs = {
+  name: string;
+  email: string;
+  phone: string;
+  message: string;
+  captcha: string;
+  id: string;
+  token: string;
+};
+const REQUIERED_TEXT = "This Is Requiered";
 
 /**
  *
@@ -14,33 +33,77 @@ export default function Contact(): React.ReactNode {
     { success: false },
   );
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+    setValues,
+    reset,
+  } = useForm<Inputs>({ mode: "onChange" });
+
   const [question, setQuestion] = useState("");
-  const [token, setToken] = useState("");
-  const [id, setId] = useState("");
+
+  const [isPending, startTransition] = useTransition();
+
+  const { toggleScroll, isPreventScroll } = usePreventScrolling();
 
   // Function to fetch CAPTCHA question
-  const fetchCaptcha = async () => {
+  const fetchCaptcha = useCallback(async () => {
     try {
       const response = await fetch("/api/generateCaptcha");
       if (!response.ok) {
         throw new Error("Failed to fetch CAPTCHA");
       }
       const data: CaptchaProps = await response.json();
-      setToken(data.token);
       setQuestion(data.question);
-      setId(data.id);
+      setValues({ id: data.id, token: data.token });
     } catch (error) {
       console.error("Error fetching CAPTCHA:", error);
     }
-  };
+  }, [setValues]);
 
   // Fetch CAPTCHA when component mounts
   useEffect(() => {
     fetchCaptcha();
-  }, []);
+  }, [fetchCaptcha]);
+
+  useEffect(() => {
+    if (state.success) {
+      reset();
+      toggleScroll();
+    }
+  }, [state.success, reset, toggleScroll]);
+
+  /**
+   * Handles form validations and invoke formAction function
+   * @param data
+   */
+  const onSubmitHandler: SubmitHandler<FieldValues> = (data) => {
+    const FORM_DATA = new FormData();
+    Object.entries(data).forEach(([key, value]) => {
+      FORM_DATA.append(key, value);
+    });
+    startTransition(async () => {
+      await formAction(FORM_DATA);
+    });
+  };
+
+  function updateFormStateOnChange() {
+    if (state.message) {
+      state.message = "";
+      state.success = false;
+    }
+  }
 
   return (
     <div className="overflow-hidden bg-white py-16 px-4 dark:bg-slate-900 sm:px-6 lg:px-8 lg:py-24">
+      {isPreventScroll  && state.message? (
+        <MessagePopup
+          message={state.message }
+          closePopupHandler={toggleScroll}
+        />
+      ) : null}
+      {/* <MessagePopup message="Hello Siavash Arghi" closePopupHandler={toggleScroll}></MessagePopup> */}
       <div className="relative mx-auto max-w-xl">
         <svg
           className="absolute left-full translate-x-1/2 transform"
@@ -118,38 +181,35 @@ export default function Contact(): React.ReactNode {
         </div>
         <div className="mt-12">
           <form
+            onChange={updateFormStateOnChange}
             className="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8"
-            action={formAction}
+            onSubmit={handleSubmit(onSubmitHandler)}
           >
             <div className="sm:col-span-2">
-              <label
-                htmlFor="first-name"
-                className="block text-sm font-medium text-gray-700 dark:text-slate-400"
-              >
-                Name
-              </label>
+              <LabelContainer name="name" text="Name">
+                {errors.name ? (
+                  <span className="text-red-800">{REQUIERED_TEXT}</span>
+                ) : null}
+              </LabelContainer>
               <div className="mt-1">
                 <input
                   type="text"
-                  name="name"
+                  {...register("name", { required: true })}
                   autoComplete="organization"
                   placeholder="Full name"
-                  required
                   className="border border-gray-300 block w-full rounded-md py-3 px-4 shadow-sm focus:border-sky-500 focus:ring-sky-500 dark:border-white/5 dark:bg-slate-700/50 dark:text-white"
                 />
               </div>
             </div>
             <div className="sm:col-span-2">
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700 dark:text-slate-400"
-              >
-                Email
-              </label>
+              <LabelContainer name="email" text="Email">
+                {errors.email ? (
+                  <span className="text-red-800">{REQUIERED_TEXT}</span>
+                ) : null}
+              </LabelContainer>
               <div className="mt-1">
                 <input
-                  name="email"
-                  required
+                  {...register("email", { required: true })}
                   type="email"
                   placeholder="Eg. example@email.com"
                   autoComplete="email"
@@ -158,16 +218,10 @@ export default function Contact(): React.ReactNode {
               </div>
             </div>
             <div className="sm:col-span-2">
-              <label
-                htmlFor="phone"
-                className="block text-sm font-medium text-gray-700 dark:text-slate-400"
-              >
-                Phone
-              </label>
+              <LabelContainer name="phone" text="Phone Number" />
               <div className="mt-1">
                 <input
-                  name="phone"
-                  required
+                  {...register("phone")}
                   type="text"
                   placeholder="Eg. +33 800 000000"
                   autoComplete="phone"
@@ -176,16 +230,14 @@ export default function Contact(): React.ReactNode {
               </div>
             </div>
             <div className="sm:col-span-2">
-              <label
-                htmlFor="message"
-                className="block text-sm font-medium text-gray-700 dark:text-slate-400"
-              >
-                Message
-              </label>
+              <LabelContainer name="message" text="Message">
+                {errors.message ? (
+                  <span className="text-red-800">{REQUIERED_TEXT}</span>
+                ) : null}
+              </LabelContainer>
               <div className="mt-1">
                 <textarea
-                  required
-                  name="message"
+                  {...register("message", { required: true })}
                   rows={4}
                   className="border border-gray-300 block w-full rounded-md py-3 px-4 shadow-sm focus:border-sky-500 focus:ring-sky-500 dark:border-white/5 dark:bg-slate-700/50 dark:text-white"
                 ></textarea>
@@ -193,18 +245,18 @@ export default function Contact(): React.ReactNode {
             </div>
 
             <div className="sm:col-span-2">
-              <label
-                htmlFor="captcha"
-                className="block text-sm font-medium text-gray-700 dark:text-slate-400"
-              >
-                Im Not A Robot
-              </label>
+              <LabelContainer name="captcha" text="Im Not A Robot">
+                {!state.success && !isPending && isValid ? (
+                  <span className="text-red-800">{state.message}</span>
+                ) : errors.captcha ? (
+                  <span className="text-red-800">{REQUIERED_TEXT}</span>
+                ) : null}
+              </LabelContainer>
               <div className="mt-1">
-                <input type="hidden" name="id" value={id} />
-                <input type="hidden" name="token" value={token} />
+                <input type="hidden" {...register("id")} />
+                <input type="hidden" {...register("token")} />
                 <input
-                  name="captcha"
-                  required
+                  {...register("captcha", { required: true })}
                   type="text"
                   placeholder={question}
                   className="border border-gray-300 block w-full rounded-md py-3 px-4 shadow-sm focus:border-sky-500 focus:ring-sky-500 dark:border-white/5 dark:bg-slate-700/50 dark:text-white"
@@ -212,18 +264,50 @@ export default function Contact(): React.ReactNode {
               </div>
             </div>
 
-            <div className="input-box">
-              <div style={{ color: state.success ? "green" : "red" }}>
-                {state.message}
-              </div>
-            </div>
-
             <div className="flex justify-end sm:col-span-2">
-              <SubmitButton />
+              <SubmitButton
+                isPending={isPending}
+                className=" rounded-md w-30 h-12 font-normal focus:outline-none focus-visible:ring focus-visible:ring-slate-300 shadow-sm sm:text-sm transition-colors duration-75 text-slate-50 border border-slate-300 bg-slate-600 hover:bg-slate-400 active:bg-slate-100 disabled:bg-slate-100 dark:hover:bg-gray-900 dark:active:bg-gray-800 dark:disabled:bg-gray-800 disabled:cursor-not-allowed"
+              />
             </div>
           </form>
         </div>
       </div>
+    </div>
+  );
+}
+
+function MessagePopup({
+  message,
+  closePopupHandler,
+}: {
+  message: string;
+  closePopupHandler: () => void;
+}) {
+  return (
+    <div className="fixed z-100 top-0 bottom-0 left-0 right-0 w-screen h-screen bg-[rgba(34,33,33,0.51)] flex justify-center items-center">
+      <div className=" rounded-xl flex-col flex justify-center items-center px-6 py-8 bg-white dark:bg-[#dff0f570]  font-normal text-xl md:text-3xl">
+        <span className="text-green-600 dark:text-green-900">{message}</span>
+        <button type="button" className=" cursor-pointer mt-4 text-xl bg-slate-600 text-white px-6 py-2 rounded-md" onClick={closePopupHandler}>close</button>
+      </div>
+    </div>
+  );
+}
+function LabelContainer({
+  name,
+  text,
+  children,
+}: {
+  name: string;
+  text: string;
+  children?: React.ReactNode;
+}): React.ReactNode {
+  return (
+    <div className="flex justify-between text-sm font-medium">
+      <label htmlFor={name} className="text-gray-700 dark:text-slate-400">
+        {text}
+      </label>
+      {children}
     </div>
   );
 }
