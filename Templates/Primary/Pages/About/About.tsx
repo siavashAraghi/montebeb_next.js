@@ -10,8 +10,8 @@ export default async function About(data: GeneralDataTypes) {
       <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-8">
         <div className="mt-12 md:mt-0 relative w-full min-h-80">
           <Image
-            src={data.about_img_url}
-            alt={data.title}
+            src={data.about_img_url ?? ""}
+            alt={data.title ?? ""}
             className="object-cover rounded-lg shadow-md"
             fill
           />

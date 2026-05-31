@@ -16,7 +16,7 @@ const Footer: React.FC = async () => {
           {/* <!-- Company Info --> */}
           <div className="space-y-4">
             <div className="flex items-center">
-              <Link title={GENERAL_DATA?.title} href="/">
+              <Link title={GENERAL_DATA?.title ?? ""} href="/">
                 <h1 className="text-transparent h-0">
                   {GENERAL_DATA?.header_text}
                 </h1>
@@ -93,7 +93,7 @@ const Footer: React.FC = async () => {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Contact Us</h3>
             <address className="not-italic text-gray-400 dark:text-slate-300">
-              {GENERAL_DATA?.address.split(",").map((item, index) => (
+              {GENERAL_DATA?.address?.split(",").map((item, index) => (
                 <p key={item + index}>{item}</p>
               ))}
               <p className="mt-2">

@@ -80,8 +80,8 @@ const Home: React.FC<{
                 key={post.id}
                 id={post.id}
                 title={post.title}
-                shortDesciption={post.short_description}
-                image={post.image_url}
+                shortDesciption={post.short_description ?? ""}
+                image={post.image_url ?? ""}
               ></SecondCard>
             ))}
           </div>
@@ -95,9 +95,9 @@ const Home: React.FC<{
             <BlueCard
               key={cat.id}
               label={cat.name}
-              title={cat.title}
+              title={cat.title ?? ""}
               link={cat.url_address}
-              image={cat.image_url}
+              image={cat.image_url ?? ""}
             />
           ))}
         </div>

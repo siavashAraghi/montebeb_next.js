@@ -13,8 +13,8 @@ const PrimarySlide: React.FC<{ slideDetails: Product }> = ({
       <div className=" w-full h-110 md:h-100 lg:h-140">
         <div className="w-full h-full">
           <div className="flex justify-center items-center text-white w-full h-full relative">
-            <SlideImage width={1200} height={800} priority={true} src={slideDetails.mobile_marketing_img_url} alt={slideDetails.title} classes=" block md:hidden w-full object-contain"/>
-            <SlideImage width={1200} height={800} priority={true} src={slideDetails.marketing_img_url} alt={slideDetails.title} classes="hidden md:block w-full object-cover"/>
+            <SlideImage width={1200} height={800} priority={true} src={slideDetails.mobile_marketing_img_url ?? ""} alt={slideDetails.title} classes=" block md:hidden w-full object-contain"/>
+            <SlideImage width={1200} height={800} priority={true} src={slideDetails.marketing_img_url ?? ""} alt={slideDetails.title} classes="hidden md:block w-full object-cover"/>
             <div className="absolute left-20 rounded-lg p-2 bottom-5 md:bottom-12 lg:bottom-25 text-slate-600 bg-[white]/50 w-50 md:w-50 lg:w-120 flex flex-col dark:bg-black/50">
               <p className="md:text-normal lg:text-2xl mb-4 underline dark:text-slate-300">
                 {slideDetails.title}
