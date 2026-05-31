@@ -1,4 +1,5 @@
 import { getSettings } from "@/models/settings";
+import ContactFormSkeleton from "@/Templates/Primary/Pages/Contact/ContactFormSkeleton";
 import { Suspense } from "react";
 
 /**
@@ -12,7 +13,7 @@ export default async function Contact() {
   const CONTACT = CONTACT_COMPONENT.default;
 
   return (
-    <Suspense fallback={<h1>loading... for cantact</h1>}>
+    <Suspense fallback={<ContactFormSkeleton/>}>
       <CONTACT />
     </Suspense>
   );

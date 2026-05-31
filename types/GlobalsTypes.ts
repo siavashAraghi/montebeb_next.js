@@ -106,17 +106,18 @@ export interface ImagesTypes {
   color_id: number | undefined;
 }
 
-export interface MessageType {
-  name: string;
-  email: string;
-  phone: string;
-  message: string;
+type FormFields = 'name' | 'email' | 'phone' | 'message'; // Add all relevant keys here
+export type MessageType = {
+  [key in FormFields]?: string
 }
 
 export type FormState = {
   success: boolean;
   message?: string;
   error?: string;
+  fieldErrors?: {
+    [key in FormFields]? : string
+  }
 };
 
 export interface CaptchaProps {

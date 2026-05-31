@@ -71,8 +71,9 @@ export default function Contact(): React.ReactNode {
     if (state.success) {
       reset();
       toggleScroll();
+      fetchCaptcha()
     }
-  }, [state.success, reset, toggleScroll]);
+  }, [state.success, reset, toggleScroll,fetchCaptcha]);
 
   /**
    * Handles form validations and invoke formAction function
@@ -97,13 +98,12 @@ export default function Contact(): React.ReactNode {
 
   return (
     <div className="overflow-hidden bg-white py-16 px-4 dark:bg-slate-900 sm:px-6 lg:px-8 lg:py-24">
-      {isPreventScroll  && state.message? (
+      {isPreventScroll && state.message ? (
         <MessagePopup
-          message={state.message }
+          message={state.message}
           closePopupHandler={toggleScroll}
         />
       ) : null}
-      {/* <MessagePopup message="Hello Siavash Arghi" closePopupHandler={toggleScroll}></MessagePopup> */}
       <div className="relative mx-auto max-w-xl">
         <svg
           className="absolute left-full translate-x-1/2 transform"
@@ -188,13 +188,21 @@ export default function Contact(): React.ReactNode {
             <div className="sm:col-span-2">
               <LabelContainer name="name" text="Name">
                 {errors.name ? (
-                  <span className="text-red-800">{REQUIERED_TEXT}</span>
+                  <span className="text-red-800">{errors.name.message}</span>
+                ) : state.fieldErrors?.name ? (
+                  <span className="text-red-800">{state.fieldErrors.name}</span>
                 ) : null}
               </LabelContainer>
               <div className="mt-1">
                 <input
                   type="text"
-                  {...register("name", { required: true })}
+                  {...register("name", {
+                    required: REQUIERED_TEXT,
+                    maxLength: {
+                      value: 30,
+                      message: "Your name must be 30 characters or less.",
+                    },
+                  })}
                   autoComplete="organization"
                   placeholder="Full name"
                   className="border border-gray-300 block w-full rounded-md py-3 px-4 shadow-sm focus:border-sky-500 focus:ring-sky-500 dark:border-white/5 dark:bg-slate-700/50 dark:text-white"
@@ -204,12 +212,18 @@ export default function Contact(): React.ReactNode {
             <div className="sm:col-span-2">
               <LabelContainer name="email" text="Email">
                 {errors.email ? (
-                  <span className="text-red-800">{REQUIERED_TEXT}</span>
+                  <span className="text-red-800">{errors.email.message}</span>
                 ) : null}
               </LabelContainer>
               <div className="mt-1">
                 <input
-                  {...register("email", { required: true })}
+                  {...register("email", {
+                    required: REQUIERED_TEXT,
+                    pattern: {
+                      value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i,
+                      message: "Please enter a valid email address",
+                    },
+                  })}
                   type="email"
                   placeholder="Eg. example@email.com"
                   autoComplete="email"
@@ -232,12 +246,12 @@ export default function Contact(): React.ReactNode {
             <div className="sm:col-span-2">
               <LabelContainer name="message" text="Message">
                 {errors.message ? (
-                  <span className="text-red-800">{REQUIERED_TEXT}</span>
+                  <span className="text-red-800">{errors.message.message}</span>
                 ) : null}
               </LabelContainer>
               <div className="mt-1">
                 <textarea
-                  {...register("message", { required: true })}
+                  {...register("message", { required:REQUIERED_TEXT })}
                   rows={4}
                   className="border border-gray-300 block w-full rounded-md py-3 px-4 shadow-sm focus:border-sky-500 focus:ring-sky-500 dark:border-white/5 dark:bg-slate-700/50 dark:text-white"
                 ></textarea>
@@ -249,14 +263,14 @@ export default function Contact(): React.ReactNode {
                 {!state.success && !isPending && isValid ? (
                   <span className="text-red-800">{state.message}</span>
                 ) : errors.captcha ? (
-                  <span className="text-red-800">{REQUIERED_TEXT}</span>
+                  <span className="text-red-800">{errors.captcha.message}</span>
                 ) : null}
               </LabelContainer>
               <div className="mt-1">
                 <input type="hidden" {...register("id")} />
                 <input type="hidden" {...register("token")} />
                 <input
-                  {...register("captcha", { required: true })}
+                  {...register("captcha", { required: REQUIERED_TEXT })}
                   type="text"
                   placeholder={question}
                   className="border border-gray-300 block w-full rounded-md py-3 px-4 shadow-sm focus:border-sky-500 focus:ring-sky-500 dark:border-white/5 dark:bg-slate-700/50 dark:text-white"
@@ -288,7 +302,13 @@ function MessagePopup({
     <div className="fixed z-100 top-0 bottom-0 left-0 right-0 w-screen h-screen bg-[rgba(34,33,33,0.51)] flex justify-center items-center">
       <div className=" rounded-xl flex-col flex justify-center items-center px-6 py-8 bg-white dark:bg-[#dff0f570]  font-normal text-xl md:text-3xl">
         <span className="text-green-600 dark:text-green-900">{message}</span>
-        <button type="button" className=" cursor-pointer mt-4 text-xl bg-slate-600 text-white px-6 py-2 rounded-md" onClick={closePopupHandler}>close</button>
+        <button
+          type="button"
+          className=" cursor-pointer mt-4 text-xl bg-slate-600 text-white px-6 py-2 rounded-md"
+          onClick={closePopupHandler}
+        >
+          close
+        </button>
       </div>
     </div>
   );
